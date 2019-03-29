@@ -1,11 +1,24 @@
 package com.lembergstate.spcs;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,9 +34,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -63,11 +79,15 @@ public class HomeActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
 
         list.setAdapter(adapter);
-        for (int i=0;i<30;++i){
-            arrayList.add("Yulian Salo ID "+ currentDateTime.getText().toString());
+        for (int i = 0; i < 30; ++i) {
+            arrayList.add("Yulian Salo ID " + currentDateTime.getText().toString());
         }
-    }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            new Notifty().notificationNew("Title", "message", this);
+        } else
+            new Notifty().notificationOld(this);
 
+    }
 
 
     private void setInitialDateTime() {
@@ -91,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
     };
 
     public void start() {
-        if(timer != null) {
+        if (timer != null) {
             return;
         }
         timer = new Timer();
@@ -111,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             try {
                 Socket socket = new Socket("192.168.1.11", 1661);
                 final String message;
-                sendMessage(currentDateTime.getText().toString(),socket);
+                sendMessage(currentDateTime.getText().toString(), socket);
                 this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 message = input.readLine();
 //            if(message==null)
@@ -120,7 +140,7 @@ public class HomeActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
 //                arrayList.clear();
                     if (message.contains("!"))
-                        arrayList.addAll(Arrays.asList( message.split("!")));
+                        arrayList.addAll(Arrays.asList(message.split("!")));
                     else
                         arrayList.add(message);
 
@@ -158,10 +178,68 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+        }
 
         @Override
-        protected void onProgressUpdate(Void... values) {}
+        protected void onProgressUpdate(Void... values) {
+        }
     }
+
+    private class Notifty {
+        public void notificationOld(Context con) {
+            int notificationId = createID();
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(con)
+                            .setContentTitle("Title")
+                            .setContentText("Notification text")
+                            .setSmallIcon(R.drawable.logo);
+            Notification notification = builder.build();
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationId, notification);
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        public void notificationNew(String title, String message, Context context) {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            int notificationId = createID();
+            String channelId = "channel-id";
+            String channelName = "Channel Name";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(
+                        channelId, channelName, importance);
+                notificationManager.createNotificationChannel(mChannel);
+            }
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(R.drawable.logo)//R.mipmap.ic_launcher
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setVibrate(new long[]{100, 250})
+                    .setLights(Color.YELLOW, 500, 5000)
+                    .setAutoCancel(true)
+                    .setColor(ContextCompat.getColor(context, R.color.aluminum));
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addNextIntent(new Intent(context, MainActivity.class));
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            notificationManager.notify(notificationId, mBuilder.build());
+        }
+
+        public int createID() {
+            Date now = new Date();
+            int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.FRENCH).format(now));
+            return id;
+        }
+    }
+
 }
 
