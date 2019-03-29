@@ -50,33 +50,35 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(intent);
 
-        _loginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        String email = input_rfid.getText().toString();
-        String password = _passwordText.getText().toString();
-
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        // TODO: IF SERVER IS OK UNCOMMENT THIS
+//        if (!validate()) {
+//            onLoginFailed();
+//            return;
+//        }
+//
+//        _loginButton.setEnabled(false);
+//
+//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Authenticating...");
+//        progressDialog.show();
+//
+//        String email = input_rfid.getText().toString();
+//        String password = _passwordText.getText().toString();
+//
+//        // TODO: Implement your own authentication logic here.
+//
+//        new android.os.Handler().postDelayed(
+//                () -> {
+//                    // On complete call either onLoginSuccess or onLoginFailed
+//                    onLoginSuccess();
+//                    // onLoginFailed();
+//                    progressDialog.dismiss();
+//                }, 3000);
     }
 
 

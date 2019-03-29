@@ -2,6 +2,8 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">#FFFF</item>
+
         <!-- Customize your theme here. -->
     </style>
 
@@ -16,7 +18,10 @@
         <item name="colorControlActivated">@color/white</item>
         <item name="colorControlHighlight">@color/white</item>
         <item name="android:textColorHint">@color/iron</item>
+        <!---->
+        <item name="android:textColor">#FFFF</item>
 
+        <!---->
         <item name="colorButtonNormal">@color/primary_darker</item>
         <item name="android:colorButtonNormal" tools:targetApi="lollipop">@color/primary_darker</item>
     </style>
@@ -24,6 +29,7 @@
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/white</item>
         <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:textColor">#FFFF</item>
         <item name="android:background">@color/primary</item>
     </style>
 

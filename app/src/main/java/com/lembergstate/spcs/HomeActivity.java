@@ -42,35 +42,30 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        d = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                dateAndTime.set(Calendar.YEAR, year);
-                dateAndTime.set(Calendar.MONTH, monthOfYear);
-                dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                setInitialDateTime();
+        d = (view, year, monthOfYear, dayOfMonth) -> {
+            dateAndTime.set(Calendar.YEAR, year);
+            dateAndTime.set(Calendar.MONTH, monthOfYear);
+            dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setInitialDateTime();
 
-            }
         };
         Datebtn = findViewById(R.id.SetDate);
-        Datebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(HomeActivity.this, d,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                        .show();
-
-            }
-        });
+        Datebtn.setOnClickListener(view -> new DatePickerDialog(HomeActivity.this, d,
+                dateAndTime.get(Calendar.YEAR),
+                dateAndTime.get(Calendar.MONTH),
+                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                .show());
         currentDateTime = findViewById(R.id.Datetext);
         setInitialDateTime();
 
         list = findViewById(R.id.ListVIew);
         arrayList = new ArrayList<>();
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-        list.setAdapter(adapter);
 
+        list.setAdapter(adapter);
+        for (int i=0;i<30;++i){
+            arrayList.add("Yulian Salo ID "+ currentDateTime.getText().toString());
+        }
     }
 
 
@@ -122,21 +117,16 @@ public class HomeActivity extends AppCompatActivity {
 //            if(message==null)
 //                message =  "Yulian Salo ID "+ currentDateTime.getText().toString();
 //            final String finalMessage = message;
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
+                runOnUiThread(() -> {
 //                arrayList.clear();
-                        if (message.contains("!"))
-                            arrayList.addAll(Arrays.asList( message.split("!")));
-                        else
-                            arrayList.add(message);
+                    if (message.contains("!"))
+                        arrayList.addAll(Arrays.asList( message.split("!")));
+                    else
+                        arrayList.add(message);
 
-                        adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
 
-                    }
                 });
-
                 input.close();
                 socket.close();
                 this.cancel(true);
@@ -153,19 +143,16 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         private void sendMessage(final String message, final Socket socket) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (null != socket) {
-                            PrintWriter out = new PrintWriter(new BufferedWriter(
-                                    new OutputStreamWriter(socket.getOutputStream())),
-                                    true);
-                            out.println(message);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            new Thread(() -> {
+                try {
+                    if (null != socket) {
+                        PrintWriter out = new PrintWriter(new BufferedWriter(
+                                new OutputStreamWriter(socket.getOutputStream())),
+                                true);
+                        out.println(message);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }).start();
         }
