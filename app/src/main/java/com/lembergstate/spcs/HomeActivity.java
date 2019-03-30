@@ -87,6 +87,13 @@ public class HomeActivity extends AppCompatActivity {
 //        } else
 //            new Notifty().notificationOld(this);
 
+        // Start Background Service HERE
+        Intent intent = new Intent(HomeActivity.this, NotifyService.class);
+        startService(intent);
+
+        // STOP Background Service HERE
+//        Intent intent = new Intent(HomeActivity.this, NotifyService.class);
+//        stopService(intent);
     }
 
 
@@ -105,7 +112,8 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            new Client().execute("");
+            new ClientSocket(currentDateTime.getText().toString(), arrayList, adapter,
+                    HomeActivity.this);
 
         }
     };
@@ -123,123 +131,69 @@ public class HomeActivity extends AppCompatActivity {
         timer = null;
     }
 
-    private class Client extends AsyncTask<String, Void, String> {
-        BufferedReader input;
+//    private class Client extends AsyncTask<String, Void, String> {
+//        BufferedReader input;
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
+//                String message = "";
+//                sendMessage(currentDateTime.getText().toString(), socket);
+//                this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                message = input.readLine();
+//                if (message == null)
+//                    message = "Yulian Salo ID " + currentDateTime.getText().toString();
+//                final String finalMessage = message;
+//                runOnUiThread(() -> {
+//                    arrayList.clear();
+//                    if (finalMessage.contains("!"))
+//                        arrayList.addAll(Arrays.asList(finalMessage.split("!")));
+//                    else
+//                        arrayList.add(finalMessage);
+//
+//                    adapter.notifyDataSetChanged();
+//
+//                });
+//                input.close();
+//                socket.close();
+//                this.cancel(true);
+//                return "Executed";
+//
+//
+//            } catch (UnknownHostException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return "Executed";
+//        }
+//
+//        private void sendMessage(final String message, final Socket socket) {
+//            new Thread(() -> {
+//                try {
+//                    if (null != socket) {
+//                        PrintWriter out = new PrintWriter(new BufferedWriter(
+//                                new OutputStreamWriter(socket.getOutputStream())),
+//                                true);
+//                        out.println(message);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }).start();
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... values) {
+//        }
+//    }
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
-                String message = "";
-                sendMessage(currentDateTime.getText().toString(), socket);
-                this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                message = input.readLine();
-                if (message == null)
-                    message = "Yulian Salo ID " + currentDateTime.getText().toString();
-                final String finalMessage = message;
-                runOnUiThread(() -> {
-                arrayList.clear();
-                    if (finalMessage.contains("!"))
-                        arrayList.addAll(Arrays.asList(finalMessage.split("!")));
-                    else
-                        arrayList.add(finalMessage);
-
-                    adapter.notifyDataSetChanged();
-
-                });
-                input.close();
-                socket.close();
-                this.cancel(true);
-                return "Executed";
-
-
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return "Executed";
-        }
-
-        private void sendMessage(final String message, final Socket socket) {
-            new Thread(() -> {
-                try {
-                    if (null != socket) {
-                        PrintWriter out = new PrintWriter(new BufferedWriter(
-                                new OutputStreamWriter(socket.getOutputStream())),
-                                true);
-                        out.println(message);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
-    }
-
-    private class Notifty {
-        public void notificationOld(Context con) {
-            int notificationId = createID();
-            NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(con)
-                            .setContentTitle("Title")
-                            .setContentText("Notification text")
-                            .setSmallIcon(R.drawable.logo);
-            Notification notification = builder.build();
-
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationId, notification);
-
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-        public void notificationNew(String title, String message, Context context) {
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            int notificationId = createID();
-            String channelId = "channel-id";
-            String channelName = "Channel Name";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationChannel mChannel = new NotificationChannel(
-                        channelId, channelName, importance);
-                notificationManager.createNotificationChannel(mChannel);
-            }
-
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.logo)//R.mipmap.ic_launcher
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setVibrate(new long[]{100, 250})
-                    .setLights(Color.YELLOW, 500, 5000)
-                    .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(context, R.color.aluminum));
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addNextIntent(new Intent(context, MainActivity.class));
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-
-            notificationManager.notify(notificationId, mBuilder.build());
-        }
-
-        public int createID() {
-            Date now = new Date();
-            int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.FRENCH).format(now));
-            return id;
-        }
-    }
 
 }
 
