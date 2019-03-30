@@ -16,12 +16,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Handler;
 
-public class ClientSocket  {
+public class ClientSocket {
     private BufferedReader input;
     private String currentDateTime;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> adapter;
+    private String Person_ID;
 
+    public String getPerson_ID() {
+        return Person_ID;
+    }
+
+    public void setPerson_ID(String person_ID) {
+        Person_ID = person_ID;
+    }
 
     ClientSocket() {
 
@@ -43,7 +51,7 @@ public class ClientSocket  {
         try {
             Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
             String message = "";
-            sendMessage(currentDateTime, socket);
+            sendMessage(currentDateTime + "/" + Person_ID, socket);
             this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             message = input.readLine();
 //            if (message == null)
@@ -56,11 +64,11 @@ public class ClientSocket  {
 //                arrayList.add(finalMessage);
 
 //            adapter.notifyDataSetChanged();
-                arrayList.clear();
-                if (finalMessage.contains("!"))
-                    arrayList.addAll(Arrays.asList(finalMessage.split("!")));
-                else
-                    arrayList.add(finalMessage);
+            arrayList.clear();
+            if (finalMessage.contains("!"))
+                arrayList.addAll(Arrays.asList(finalMessage.split("!")));
+            else
+                arrayList.add(finalMessage);
 //            activity.runOnUiThread(
 //                    new Runnable() {
 //                        @Override
@@ -113,7 +121,7 @@ public class ClientSocket  {
     }
 
     public String ToNotify() {
-        return arrayList.get(NotifData()-1);
+        return arrayList.get(NotifData() - 1);
     }
 
 }

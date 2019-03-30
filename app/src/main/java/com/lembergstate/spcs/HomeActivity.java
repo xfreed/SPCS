@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
     private ClientSocket CS;
-    private int count=0;
+    private int count;
     private NotifyService notifyService;
     Calendar dateAndTime = Calendar.getInstance();
     TextView currentDateTime;
@@ -48,7 +48,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         d = (view, year, monthOfYear, dayOfMonth) -> {
             dateAndTime.set(Calendar.YEAR, year);
             dateAndTime.set(Calendar.MONTH, monthOfYear);
@@ -89,6 +88,8 @@ public class HomeActivity extends AppCompatActivity {
         CS.setArrayList(getArrayList());
         setInitialDateTime();
         CS.setCurrentDateTime(getCurrentDateTime());
+        Intent intent = getIntent();
+        CS.setPerson_ID(intent.getStringExtra("Person_ID"));
 //        notifyService = new NotifyService();
 //        notifyService.setAdapter(getAdapter());
 //        notifyService.setArrayList(getArrayList());
@@ -222,6 +223,7 @@ public class HomeActivity extends AppCompatActivity {
     public String getCurrentDateTime() {
         return currentDateTime.getText().toString();
     }
+
     private class Notify {
         public void notificationOld(String title, String message, Context con) {
             int notificationId = createID();

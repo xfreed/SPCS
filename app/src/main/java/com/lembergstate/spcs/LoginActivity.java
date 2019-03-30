@@ -50,7 +50,8 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("Person_ID", input_rfid.getText().toString());
         startActivity(intent);
 
         // TODO: IF SERVER IS OK UNCOMMENT THIS
