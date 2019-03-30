@@ -79,13 +79,13 @@ public class HomeActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
 
         list.setAdapter(adapter);
-        for (int i = 0; i < 30; ++i) {
-            arrayList.add("Yulian Salo ID " + currentDateTime.getText().toString());
-        }
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            new Notifty().notificationNew("Title", "message", this);
-        } else
-            new Notifty().notificationOld(this);
+//        for (int i = 0; i < 30; ++i) {
+//            arrayList.add("Yulian Salo ID " + currentDateTime.getText().toString());
+//        }
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+//            new Notifty().notificationNew("Title", "message", this);
+//        } else
+//            new Notifty().notificationOld(this);
 
     }
 
@@ -129,20 +129,20 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Socket socket = new Socket("192.168.1.11", 1661);
-                final String message;
+                Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
+                String message = "";
                 sendMessage(currentDateTime.getText().toString(), socket);
                 this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 message = input.readLine();
-//            if(message==null)
-//                message =  "Yulian Salo ID "+ currentDateTime.getText().toString();
-//            final String finalMessage = message;
+                if (message == null)
+                    message = "Yulian Salo ID " + currentDateTime.getText().toString();
+                final String finalMessage = message;
                 runOnUiThread(() -> {
-//                arrayList.clear();
-                    if (message.contains("!"))
-                        arrayList.addAll(Arrays.asList(message.split("!")));
+                arrayList.clear();
+                    if (finalMessage.contains("!"))
+                        arrayList.addAll(Arrays.asList(finalMessage.split("!")));
                     else
-                        arrayList.add(message);
+                        arrayList.add(finalMessage);
 
                     adapter.notifyDataSetChanged();
 
