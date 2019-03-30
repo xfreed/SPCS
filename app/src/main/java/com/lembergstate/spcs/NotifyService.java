@@ -1,5 +1,6 @@
 package com.lembergstate.spcs;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,9 +11,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.ArrayAdapter;
 
+import java.io.Serializable;
+import java.io.SerializablePermission;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
@@ -22,8 +28,53 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-public class NotifyService extends Service {
+public class NotifyService extends Service implements Serializable {
     private Timer timer;
+    private String currentDateTime;
+    private ArrayList<String> arrayList;
+    private ArrayAdapter<String> adapter;
+    private int count = 0;
+    private ClientSocket CS;
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        Bundle extras = intent.getExtras();
+        CS = (ClientSocket) extras.getSerializable("CS");
+//        currentDateTime = (String) extras.get("cdt");
+//        arrayList = (ArrayList<String>) extras.get("arr");
+//        adapter = (ArrayAdapter<String>) extras.get("adp");
+//        CS = new ClientSocket();
+//        CS.setAdapter(getAdapter());
+//        CS.setArrayList(getArrayList());
+//        CS.setCurrentDateTime(getCurrentDateTime());
+        start();
+
+    }
+
+    public String getCurrentDateTime() {
+        return currentDateTime;
+    }
+
+    public void setCurrentDateTime(String currentDateTime) {
+        this.currentDateTime = currentDateTime;
+    }
+
+    public ArrayList<String> getArrayList() {
+        return arrayList;
+    }
+
+    public void setArrayList(ArrayList<String> arrayList) {
+        this.arrayList = arrayList;
+    }
+
+    public ArrayAdapter<String> getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(ArrayAdapter<String> adapter) {
+        this.adapter = adapter;
+    }
 
     public NotifyService() {
     }
@@ -34,16 +85,6 @@ public class NotifyService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        start();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
 
     @Override
     public void onDestroy() {
@@ -55,7 +96,15 @@ public class NotifyService extends Service {
 
         @Override
         public void run() {
-
+            int tmp = new ClientSocket().NotifData();
+            if (tmp > count) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                    new Notify().notificationNew("New data in app",
+                            new ClientSocket().ToNotify(), new HomeActivity().getAct());
+                } else
+                    new Notify().notificationOld("New data in app",
+                            new ClientSocket().ToNotify(), new HomeActivity().getAct());
+            }
         }
     };
 
@@ -72,13 +121,13 @@ public class NotifyService extends Service {
         timer = null;
     }
 
-    private class Notifty {
-        public void notificationOld(Context con) {
+    private class Notify {
+        public void notificationOld(String title, String message, Context con) {
             int notificationId = createID();
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(con)
-                            .setContentTitle("Title")
-                            .setContentText("Notification text")
+                            .setContentTitle(title)
+                            .setContentText(message)
                             .setSmallIcon(R.drawable.logo);
             Notification notification = builder.build();
 

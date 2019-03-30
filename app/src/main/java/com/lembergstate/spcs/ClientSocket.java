@@ -1,8 +1,7 @@
 package com.lembergstate.spcs;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Looper;
 import android.widget.ArrayAdapter;
 
 import java.io.BufferedReader;
@@ -15,25 +14,32 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Handler;
 
-public class ClientSocket extends AsyncTask<String, Void, String> {
+public class ClientSocket  {
     private BufferedReader input;
     private String currentDateTime;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> adapter;
-    private Activity activity;
 
-    ClientSocket(String currentDateTime, ArrayList<String> arrayList, ArrayAdapter<String> adapter,
-                 Activity activity) {
-        this.activity = activity;
-        this.adapter = adapter;
-        this.arrayList = arrayList;
-        this.currentDateTime = currentDateTime;
-        this.execute("");
+
+    ClientSocket() {
+
     }
 
-    @Override
-    protected String doInBackground(String... params) {
+    public void setCurrentDateTime(String currentDateTime) {
+        this.currentDateTime = currentDateTime;
+    }
+
+    public void setArrayList(ArrayList<String> arrayList) {
+        this.arrayList = arrayList;
+    }
+
+    public void setAdapter(ArrayAdapter<String> adapter) {
+        this.adapter = adapter;
+    }
+
+    public void GetData() {
         try {
             Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
             String message = "";
@@ -43,20 +49,28 @@ public class ClientSocket extends AsyncTask<String, Void, String> {
 //            if (message == null)
 //                message = "Yulian Salo ID " + currentDateTime.toString();
             final String finalMessage = message;
-            activity.runOnUiThread(() -> {
+//            arrayList.clear();
+//            if (finalMessage.contains("!"))
+//                arrayList.addAll(Arrays.asList(finalMessage.split("!")));
+//            else
+//                arrayList.add(finalMessage);
+
+//            adapter.notifyDataSetChanged();
                 arrayList.clear();
                 if (finalMessage.contains("!"))
                     arrayList.addAll(Arrays.asList(finalMessage.split("!")));
                 else
                     arrayList.add(finalMessage);
+//            activity.runOnUiThread(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.notifyDataSetChanged();
+//                        }
+//                    });
 
-                adapter.notifyDataSetChanged();
-
-            });
             input.close();
             socket.close();
-            this.cancel(true);
-            return "Executed";
 
 
         } catch (UnknownHostException e) {
@@ -65,7 +79,18 @@ public class ClientSocket extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
 
-        return "Executed";
+    }
+
+    public String getCurrentDateTime() {
+        return currentDateTime;
+    }
+
+    public ArrayList<String> getArrayList() {
+        return arrayList;
+    }
+
+    public ArrayAdapter<String> getAdapter() {
+        return adapter;
     }
 
     private void sendMessage(final String message, final Socket socket) {
@@ -83,11 +108,12 @@ public class ClientSocket extends AsyncTask<String, Void, String> {
         }).start();
     }
 
-    @Override
-    protected void onPreExecute() {
+    public int NotifData() {
+        return arrayList.size();
     }
 
-    @Override
-    protected void onProgressUpdate(Void... values) {
+    public String ToNotify() {
+        return arrayList.get(NotifData()-1);
     }
+
 }
