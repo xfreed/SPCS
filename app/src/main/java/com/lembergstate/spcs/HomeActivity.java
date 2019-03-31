@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
 
         list = findViewById(R.id.ListVIew);
         arrayList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+        adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_item, arrayList);
 
         list.setAdapter(adapter);
 
