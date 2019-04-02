@@ -1,20 +1,12 @@
 package com.lembergstate.spcs;
 
-import android.app.Activity;
-import android.os.Looper;
 import android.widget.ArrayAdapter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Handler;
 
 public class ClientSocket {
     private BufferedReader input;
@@ -23,17 +15,10 @@ public class ClientSocket {
     private ArrayAdapter<String> adapter;
     private String Person_ID;
 
-    public String getPerson_ID() {
-        return Person_ID;
-    }
-
     public void setPerson_ID(String person_ID) {
         Person_ID = person_ID;
     }
 
-    ClientSocket() {
-
-    }
 
     public void setCurrentDateTime(String currentDateTime) {
         this.currentDateTime = currentDateTime;
@@ -49,34 +34,17 @@ public class ClientSocket {
 
     public void GetData() {
         try {
-            Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
-            String message = "";
+            Socket socket = new Socket("192.168.43.116", 1661);
+            String message; //=""
             sendMessage(currentDateTime + "/" + Person_ID, socket);
             this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             message = input.readLine();
-//            if (message == null)
-//                message = "Yulian Salo ID " + currentDateTime.toString();
             final String finalMessage = message;
-//            arrayList.clear();
-//            if (finalMessage.contains("!"))
-//                arrayList.addAll(Arrays.asList(finalMessage.split("!")));
-//            else
-//                arrayList.add(finalMessage);
-
-//            adapter.notifyDataSetChanged();
             arrayList.clear();
             if (finalMessage.contains("!"))
                 arrayList.addAll(Arrays.asList(finalMessage.split("!")));
             else
                 arrayList.add(finalMessage);
-//            activity.runOnUiThread(
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    });
-
             input.close();
             socket.close();
 
@@ -89,9 +57,6 @@ public class ClientSocket {
 
     }
 
-    public String getCurrentDateTime() {
-        return currentDateTime;
-    }
 
     public ArrayList<String> getArrayList() {
         return arrayList;
@@ -116,12 +81,12 @@ public class ClientSocket {
         }).start();
     }
 
-    public int NotifData() {
+    public int NotifyData() {
         return arrayList.size();
     }
 
     public String ToNotify() {
-        return arrayList.get(NotifData() - 1);
+        return arrayList.get(NotifyData() - 1);
     }
 
 }

@@ -1,12 +1,6 @@
 package com.lembergstate.spcs;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,20 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView list;
@@ -38,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<String> arrayList;
     private ClientSocket CS;
     private int count;
-    private NotifyService notifyService;
+    //    private NotifyService notifyService;
     Calendar dateAndTime = Calendar.getInstance();
     TextView currentDateTime;
     Button Datebtn;
@@ -72,17 +59,7 @@ public class HomeActivity extends AppCompatActivity {
 //        for (int i = 0; i < 30; ++i) {
 //            arrayList.add("Yulian Salo ID " + currentDateTime.getText().toString());
 //        }
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-//            new Notifty().notificationNew("Title", "message", this);
-//        } else
-//            new Notifty().notificationOld(this);
 
-        // Start Background Service HERE
-
-
-        // STOP Background Service HERE
-//        Intent intent = new Intent(HomeActivity.this, NotifyService.class);
-//        stopService(intent);
         CS = new ClientSocket();
         CS.setAdapter(getAdapter());
         CS.setArrayList(getArrayList());
@@ -90,14 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         CS.setCurrentDateTime(getCurrentDateTime());
         Intent intent = getIntent();
         CS.setPerson_ID(intent.getStringExtra("Person_ID"));
-//        notifyService = new NotifyService();
-//        notifyService.setAdapter(getAdapter());
-//        notifyService.setArrayList(getArrayList());
-//        notifyService.setCurrentDateTime(getCurrentDateTime());
-//        Intent intent = new Intent(HomeActivity.this, NotifyService.class);
-//        intent.putExtra("CS", (Serializable) CS);
-//        startService(intent);
-        count = CS.NotifData();
+        count = CS.NotifyData();
     }
 
 
@@ -107,7 +77,6 @@ public class HomeActivity extends AppCompatActivity {
                 dateAndTime.getTimeInMillis(),
                 DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE
         ));
-//        new Client().execute("");
         start();
     }
 
@@ -120,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             arrayList = CS.getArrayList();
             adapter = CS.getAdapter();
             runOnUiThread(() -> adapter.notifyDataSetChanged());
-            int tmp = CS.NotifData();
+            int tmp = CS.NotifyData();
             if (tmp > count) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                     new Notify().notificationNew("New data in app",
@@ -146,71 +115,6 @@ public class HomeActivity extends AppCompatActivity {
         timer = null;
     }
 
-    //    private class Client extends AsyncTask<String, Void, String> {
-//        BufferedReader input;
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            try {
-//                Socket socket = new Socket("192.168.43.116", 1661); //192.168.1.11
-//                String message = "";
-//                sendMessage(currentDateTime.getText().toString(), socket);
-//                this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//                message = input.readLine();
-//                if (message == null)
-//                    message = "Yulian Salo ID " + currentDateTime.getText().toString();
-//                final String finalMessage = message;
-//                runOnUiThread(() -> {
-//                    arrayList.clear();
-//                    if (finalMessage.contains("!"))
-//                        arrayList.addAll(Arrays.asList(finalMessage.split("!")));
-//                    else
-//                        arrayList.add(finalMessage);
-//
-//                    adapter.notifyDataSetChanged();
-//
-//                });
-//                input.close();
-//                socket.close();
-//                this.cancel(true);
-//                return "Executed";
-//
-//
-//            } catch (UnknownHostException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return "Executed";
-//        }
-//
-//        private void sendMessage(final String message, final Socket socket) {
-//            new Thread(() -> {
-//                try {
-//                    if (null != socket) {
-//                        PrintWriter out = new PrintWriter(new BufferedWriter(
-//                                new OutputStreamWriter(socket.getOutputStream())),
-//                                true);
-//                        out.println(message);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Void... values) {
-//        }
-//    }
-    public Activity getAct() {
-        return HomeActivity.this;
-    }
 
     public ArrayAdapter<String> getAdapter() {
         return adapter;
