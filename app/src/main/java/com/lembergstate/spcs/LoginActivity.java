@@ -1,19 +1,13 @@
 package com.lembergstate.spcs;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
-
 import android.content.Intent;
-import android.view.View;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void login() {
+    private void login() {
         Log.d(TAG, "Login");
 
         Intent intent = new Intent(this, HomeActivity.class);
@@ -101,37 +95,44 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
-        finish();
-    }
+// --Commented out by Inspection START (07.04.2019 16:14):
+//    public void onLoginSuccess() {
+//        _loginButton.setEnabled(true);
+//        finish();
+//    }
+// --Commented out by Inspection STOP (07.04.2019 16:14)
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        _loginButton.setEnabled(true);
-    }
-
-    public boolean validate() {
-        boolean valid = true;
-
-        String email = input_rfid.getText().toString();
-        String password = _passwordText.getText().toString();
-
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            input_rfid.setError("enter a valid rfid number");
-            valid = false;
-        } else {
-            input_rfid.setError(null);
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            _passwordText.setError(null);
-        }
-
-        return valid;
-    }
+// --Commented out by Inspection START (07.04.2019 16:14):
+//// --Commented out by Inspection START (07.04.2019 16:14):
+////    public void onLoginFailed() {
+////        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+////
+////        _loginButton.setEnabled(true);
+////    }
+//// --Commented out by Inspection STOP (07.04.2019 16:14)
+//
+//    public boolean validate() {
+//        boolean valid = true;
+//
+//        String email = input_rfid.getText().toString();
+//        String password = _passwordText.getText().toString();
+//
+//        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//            input_rfid.setError("enter a valid rfid number");
+//            valid = false;
+//        } else {
+//            input_rfid.setError(null);
+//        }
+//
+//        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+//            _passwordText.setError("between 4 and 10 alphanumeric characters");
+//            valid = false;
+//        } else {
+//            _passwordText.setError(null);
+//        }
+//
+//        return valid;
+//
+//    }
+// --Commented out by Inspection STOP (07.04.2019 16:14)
 }
