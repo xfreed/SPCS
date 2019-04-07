@@ -8,8 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ClientSocket {
-    private BufferedReader input;
+class ClientSocket {
     private String currentDateTime;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> adapter;
@@ -37,7 +36,7 @@ public class ClientSocket {
             Socket socket = new Socket("192.168.43.116", 1661);
             String message; //=""
             sendMessage(currentDateTime + "/" + Person_ID, socket);
-            this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             message = input.readLine();
             final String finalMessage = message;
             arrayList.clear();
