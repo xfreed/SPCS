@@ -1,6 +1,11 @@
 package com.lembergstate.spcs;
 
-import android.app.*;
+import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,13 +16,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView list;
@@ -55,10 +66,9 @@ public class HomeActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_item, arrayList);
 
         list.setAdapter(adapter);
-
-//        for (int i = 0; i < 30; ++i) {
-//            arrayList.add("Yulian Salo ID " + currentDateTime.getText().toString());
-//        }
+        for (int i = 0; i < 10; ++i) {
+            arrayList.add("Yulian Salo ID " + new Date().getTime());
+        }
 
         CS = new ClientSocket();
         CS.setAdapter(getAdapter());
