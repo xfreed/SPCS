@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         for (int i = 0; i < 10; ++i) {
             arrayList.add("Yulian Salo ID " + new Date().toString());
         }
+/*      Get Data From Server
 
         CS = new ClientSocket();
         CS.setAdapter(getAdapter());
@@ -76,7 +77,18 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         CS.setPerson_ID(intent.getStringExtra("Person_ID"));
         count = CS.NotifyData();
+        */
+        Button debug = findViewById(R.id.Debug);
+        debug.setOnClickListener(view -> {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                new Notify().notificationNew(
+                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
+            } else
+                new Notify().notificationOld(
+                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
+        });
     }
+
 
 
     private void setInitialDateTime() {
