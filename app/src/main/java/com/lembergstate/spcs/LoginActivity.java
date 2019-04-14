@@ -44,8 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         Log.d(TAG, "Login");
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("Person_ID", input_email.getText().toString());
+//        Intent intent = new Intent(this, HomeActivity.class);
+//        intent.putExtra("Person_ID", input_email.getText().toString());
+//        startActivity(intent);
+        Intent intent = new Intent(this, NavigationActivity.class);
         startActivity(intent);
 
         // TODO: IF SERVER IS OK UNCOMMENT THIS
@@ -79,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
