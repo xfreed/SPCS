@@ -16,7 +16,6 @@
         <activity
             android:name=".NavigationActivity"
             android:theme="@style/AppTheme.Dark" />
-        />
         <!-- <service -->
         <!-- android:name=".NotifyService" -->
         <!-- android:enabled="true" -->
