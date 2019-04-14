@@ -15,7 +15,8 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
             android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation"></activity>
+            android:theme="@style/AppTheme.Dark" />
+        />
         <!-- <service -->
         <!-- android:name=".NotifyService" -->
         <!-- android:enabled="true" -->
