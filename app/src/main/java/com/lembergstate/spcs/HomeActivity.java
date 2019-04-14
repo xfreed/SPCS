@@ -66,8 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         list.setAdapter(adapter);
         for (int i = 0; i < 10; ++i) {
             arrayList.add("Yulian Salo ID " + new Date().toString());
-        }
-/*      Get Data From Server
+        }/*
 
         CS = new ClientSocket();
         CS.setAdapter(getAdapter());
@@ -87,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
                 new Notify().notificationOld(
                         arrayList.get(arrayList.size() - 1), HomeActivity.this);
         });
+        // FUckUP here Fix/
     }
 
 
