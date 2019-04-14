@@ -15,8 +15,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    @BindView(R.id.input_rfid)
-    EditText input_rfid;
+    @BindView(R.id.input_email)
+    EditText input_email;
     @BindView(R.id.input_password)
     EditText _passwordText;
     @BindView(R.id.btn_login)
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "Login");
 
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("Person_ID", input_rfid.getText().toString());
+        intent.putExtra("Person_ID", input_email.getText().toString());
         startActivity(intent);
 
         // TODO: IF SERVER IS OK UNCOMMENT THIS

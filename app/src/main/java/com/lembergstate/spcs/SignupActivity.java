@@ -19,7 +19,7 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.input_name)
     EditText _nameText;
     @BindView(R.id.input_address) EditText _addressText;
-    @BindView(R.id.input_rfid) EditText input_rfid;
+    @BindView(R.id.input_email) EditText input_email;
     @BindView(R.id.input_mobile) EditText _mobileText;
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.input_reEnterPassword) EditText _reEnterPasswordText;
@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
 
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
-        String email = input_rfid.getText().toString();
+        String email = input_email.getText().toString();
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
@@ -98,7 +98,7 @@ public class SignupActivity extends AppCompatActivity {
 
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
-        String email = input_rfid.getText().toString();
+        String email = input_email.getText().toString();
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
@@ -119,10 +119,10 @@ public class SignupActivity extends AppCompatActivity {
 
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            input_rfid.setError("enter a valid email address");
+            input_email.setError("enter a valid email address");
             valid = false;
         } else {
-            input_rfid.setError(null);
+            input_email.setError(null);
         }
 
         if (mobile.isEmpty() || mobile.length()!=10) {

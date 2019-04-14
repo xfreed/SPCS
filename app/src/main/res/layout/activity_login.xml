@@ -29,13 +29,13 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/input_rfid"
+                android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="RFID"
+                android:autofillHints=""
+                android:hint="Email"
                 android:inputType="textEmailAddress"
-                tools:ignore="HardcodedText"
-                android:autofillHints="" />
+                tools:ignore="HardcodedText" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--  Password Label -->
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:gravity="center"
-            android:text="Change or reset your password"
+            android:text="Don't have account? Sign up here"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
