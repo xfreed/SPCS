@@ -36,7 +36,11 @@ public class ChildrenListAdapter extends ArrayAdapter<String> {
         TextView Ttime = rowView.findViewById(R.id.LastTime);
         TextView TinOrOut = rowView.findViewById(R.id.InOrOut);
         childname.setText(childName[position]);
-        threedots.setImageResource(R.drawable.ic_more_horiz_white_24dp);
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            threedots.setImageDrawable(context.getResources().getDrawable(R. drawable.ic_more_horiz_white_24dp, context.getTheme()));
+        } else {
+            threedots.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_more_horiz_white_24dp));
+        }
         Tdate.setText(date[position]);
         Ttime.setText(time[position]);
         TinOrOut.setText(inOrOut[position]);

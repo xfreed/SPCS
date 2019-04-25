@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="149dp"
         android:layout_marginLeft="149dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="660dp"
         android:layout_marginEnd="149dp"
         android:layout_marginRight="149dp"
         android:text="TextView"
@@ -35,7 +35,7 @@
 
     <ListView
         android:id="@+id/ChilderList"
-        android:layout_width="358dp"
+        android:layout_width="350dp"
         android:layout_height="562dp"
         android:layout_marginStart="26dp"
         android:layout_marginLeft="26dp"
