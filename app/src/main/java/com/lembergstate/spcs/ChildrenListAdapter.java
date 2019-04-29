@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ChildrenListAdapter extends ArrayAdapter<String> {
 
@@ -44,7 +45,10 @@ public class ChildrenListAdapter extends ArrayAdapter<String> {
         Tdate.setText(date[position]);
         Ttime.setText(time[position]);
         TinOrOut.setText(inOrOut[position]);
+        threedots.setOnClickListener(v -> {
+            Toast.makeText(context,"Click on DOTS",Toast.LENGTH_SHORT).show();
 
+        });
         return rowView;
 
     }
