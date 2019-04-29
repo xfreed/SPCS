@@ -1,7 +1,13 @@
 package com.lembergstate.spcs;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -20,25 +28,25 @@ public class NavigationActivity extends AppCompatActivity {
     String[] ChildName = {
             "Aragorn", "Crampus",
             "Protps", "Artos",
-            "Shong",
+            "Shong", ""
     };
 
     String[] date = {
             "Today", "Today",
             "yesterday", "Today",
-            "yesterday",
+            "yesterday", ""
     };
     String[] time = {
             "8:20", "8:25",
             "8:27", "8:31",
-            "8:26",
+            "8:26", ""
     };
     String[] InOrOut = {
             "In", "In",
             "In", "Out",
-            "In",
+            "In", ""
     };
-
+    boolean[] phase = {false, false, false, false, false, true};
     private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -68,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        ChildrenListAdapter adapter = new ChildrenListAdapter(this,ChildName,date,time,InOrOut);
+        ChildrenListAdapter adapter = new ChildrenListAdapter(this, ChildName, date, time, InOrOut, phase);
         ChildList = findViewById(R.id.ChilderList);
         ChildList.setAdapter(adapter);
         ChildList.setOnItemClickListener((parent, view, position, id) -> {
@@ -94,8 +102,38 @@ public class NavigationActivity extends AppCompatActivity {
             else if(position == 4) {
 
                 Toast.makeText(getApplicationContext(),"Place Your Fifth Option Code",Toast.LENGTH_SHORT).show();
-            }
+            } else if (position == 5) {
 
+
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View promptView = layoutInflater.inflate(R.layout.dialog_add_child, null);
+
+                final AlertDialog alertD = new AlertDialog.Builder(this).create();
+
+                EditText userInput = promptView.findViewById(R.id.child_code);
+
+                Button cancel = promptView.findViewById(R.id.cancel_button);
+
+                Button ok = promptView.findViewById(R.id.ok_button);
+
+                cancel.setOnClickListener(v -> {
+                    Log.d("TEST", "CANCEL BTN");
+                    alertD.dismiss();
+                });
+
+                ok.setOnClickListener(v -> {
+                    Log.d("TEST", "OK BTN");
+                    String Code;
+                    Code = ((EditText) alertD.findViewById(R.id.child_code)).getText().toString();
+                    Log.d("TEST", "CODE: "+Code);
+
+                });
+                alertD.setView(promptView);
+
+                alertD.show();
+
+
+            }
         });
     }
 
