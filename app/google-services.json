@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "427588531485",
+    "firebase_url": "https://spcs-7f20e.firebaseio.com",
+    "project_id": "spcs-7f20e",
+    "storage_bucket": "spcs-7f20e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427588531485:android:94ca9f7f8c9daa6b",
+        "android_client_info": {
+          "package_name": "com.lembergstate.spcs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427588531485-nekotcpfkd54hc2lcprmjos0utn86kch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8Hcb1JQ1_KloNHyvKyJQWtIOcp4KBwhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427588531485-nekotcpfkd54hc2lcprmjos0utn86kch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

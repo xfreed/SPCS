@@ -7,7 +7,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -49,7 +59,23 @@ public class LoginActivity extends AppCompatActivity {
 //        startActivity(intent);
         Intent intent = new Intent(this, NavigationActivity.class);
         startActivity(intent);
+        /*
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", "simple text");
+        data.put("push", true);
 
+        FirebaseFunctions.getInstance()
+                .getHttpsCallable("GetTest")
+                .call(data)
+                .continueWith(task -> {
+                    // This continuation runs on either success or failure, but if the task
+                    // has failed then getResult() will throw an Exception which will be
+                    // propagated down.
+                    String result = (String) task.getResult().getData();
+                    Log.d("TEST",result);
+                    return result;
+                });
+                */
         // TODO: IF SERVER IS OK UNCOMMENT THIS
 //        if (!validate()) {
 //            onLoginFailed();
