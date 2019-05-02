@@ -10,10 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,31 +53,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private FirebaseFunctions mFunctions;
+
     private void login() {
         Log.d(TAG, "Login");
 
 //        Intent intent = new Intent(this, HomeActivity.class);
 //        intent.putExtra("Person_ID", input_email.getText().toString());
 //        startActivity(intent);
-        Intent intent = new Intent(this, NavigationActivity.class);
-        startActivity(intent);
-        /*
-        Map<String, Object> data = new HashMap<>();
-        data.put("text", "simple text");
-        data.put("push", true);
+//        Intent intent = new Intent(this, NavigationActivity.class);
+//        startActivity(intent);
+        Log.d("Shit", "Start here some shit...");
+        mFunctions = FirebaseFunctions.getInstance();
+        addMessage("HELLO THERE");
+//        Toast.makeText(getBaseContext(), g, Toast.LENGTH_LONG).show();
 
-        FirebaseFunctions.getInstance()
-                .getHttpsCallable("GetTest")
-                .call(data)
-                .continueWith(task -> {
-                    // This continuation runs on either success or failure, but if the task
-                    // has failed then getResult() will throw an Exception which will be
-                    // propagated down.
-                    String result = (String) task.getResult().getData();
-                    Log.d("TEST",result);
-                    return result;
-                });
-                */
         // TODO: IF SERVER IS OK UNCOMMENT THIS
 //        if (!validate()) {
 //            onLoginFailed();
@@ -164,4 +156,33 @@ public class LoginActivity extends AppCompatActivity {
 //
 //    }
 // --Commented out by Inspection STOP (07.04.2019 16:14)
+
+
+    private void addMessage(String text) {
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", text);
+        data.put("push", true);
+         mFunctions
+                .getHttpsCallable("GetTest")
+                .call(data)
+//                .continueWith(task -> {
+//                })
+        .addOnSuccessListener(this, new OnSuccessListener<HttpsCallableResult>() {
+            @Override
+            public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                Gson g = new Gson();
+                String json = g.toJson(httpsCallableResult.getData());
+                Log.d("t","Here");
+            }
+        })
+         .addOnFailureListener(this, new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e) {
+                 Log.d("t","Here");
+
+             }
+         });
+
+    }
 }
