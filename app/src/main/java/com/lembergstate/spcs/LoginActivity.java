@@ -6,19 +6,16 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +23,7 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private AtomicReference<String> Json = new AtomicReference<>("");
 
     @BindView(R.id.input_email)
     EditText input_email;
@@ -66,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("Shit", "Start here some shit...");
         mFunctions = FirebaseFunctions.getInstance();
         addMessage("HELLO THERE");
-//        Toast.makeText(getBaseContext(), g, Toast.LENGTH_LONG).show();
 
         // TODO: IF SERVER IS OK UNCOMMENT THIS
 //        if (!validate()) {
@@ -166,23 +163,14 @@ public class LoginActivity extends AppCompatActivity {
          mFunctions
                 .getHttpsCallable("GetTest")
                 .call(data)
-//                .continueWith(task -> {
-//                })
-        .addOnSuccessListener(this, new OnSuccessListener<HttpsCallableResult>() {
-            @Override
-            public void onSuccess(HttpsCallableResult httpsCallableResult) {
-                Gson g = new Gson();
-                String json = g.toJson(httpsCallableResult.getData());
-                Log.d("t","Here");
-            }
-        })
-         .addOnFailureListener(this, new OnFailureListener() {
-             @Override
-             public void onFailure(@NonNull Exception e) {
-                 Log.d("t","Here");
-
-             }
-         });
-
+                 .addOnSuccessListener(httpsCallableResult -> {
+                     Gson g = new Gson();
+                     Json.set(g.toJson(httpsCallableResult.getData()));
+                     Toast.makeText(getBaseContext(), Json.get(), Toast.LENGTH_LONG).show();
+                 })
+                 .addOnFailureListener(this, e -> {
+                     Json.set("fail");
+                     Toast.makeText(getBaseContext(), Json.get(), Toast.LENGTH_LONG).show();
+                 });
     }
 }
