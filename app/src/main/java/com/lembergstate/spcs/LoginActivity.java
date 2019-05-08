@@ -81,11 +81,12 @@ public class LoginActivity extends AppCompatActivity {
                     // On complete call either onLoginSuccess or onLoginFailed
                     progressDialog.dismiss();
                     String result = fbFunctions.getJson();
-                    if (result == "fail")
-                        onLoginFailed();
-                    else
+                    if (result.contains("ok"))
                         onLoginSuccess();
-                }, 10000);
+                    else
+                        onLoginFailed();
+
+                }, 5000);
 
     }
 
@@ -111,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(this, NavigationActivity.class);
+        intent.putExtra("EXTRA_EMAIL", input_email.getText().toString());
         startActivity(intent);
 //        finish();
     }

@@ -31,6 +31,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 public class HomeActivity extends AppCompatActivity {
+    private static String email;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
     private ClientSocket CS;
@@ -77,16 +78,17 @@ public class HomeActivity extends AppCompatActivity {
         CS.setPerson_ID(intent.getStringExtra("Person_ID"));
         count = CS.NotifyData();
         */
-        Button debug = findViewById(R.id.Debug);
-        debug.setOnClickListener(view -> {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                new Notify().notificationNew(
-                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
-            } else
-                new Notify().notificationOld(
-                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
-        });
+//        Button debug = findViewById(R.id.Debug);
+//        debug.setOnClickListener(view -> {
+//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+//                new Notify().notificationNew(
+//                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
+//            } else
+//                new Notify().notificationOld(
+//                        arrayList.get(arrayList.size() - 1), HomeActivity.this);
+//        });
         // FUckUP here Fix/
+        email = "";
     }
 
 

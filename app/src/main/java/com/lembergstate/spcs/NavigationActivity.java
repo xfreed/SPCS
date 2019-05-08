@@ -17,12 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.HashMap;
 
 public class NavigationActivity extends AppCompatActivity {
-
+    private String Email;
     private TextView mTextMessage;
-
+    private FBFunctions fbFunctions;
     private ListView ChildList;
 
     String[] ChildName = {
@@ -71,11 +71,23 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-
+        Email = getIntent().getStringExtra("EXTRA_EMAIL");
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        fbFunctions = new FBFunctions("ChildsTest", new HashMap<String, Object>() {
+            {
+                put("data", "data");//entry in java 9
+            }
+        });
+        fbFunctions.getJson();
+        new android.os.Handler().postDelayed(
+                () -> {
+                    String result = fbFunctions.getJson();
 
+                    // On complete call either onLoginSuccess or onLoginFailed
+                    result = fbFunctions.getJson();
+                }, 5000);
         ChildrenListAdapter adapter = new ChildrenListAdapter(this, ChildName, date, time, InOrOut, phase);
         ChildList = findViewById(R.id.ChilderList);
         ChildList.setAdapter(adapter);
