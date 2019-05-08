@@ -1,5 +1,6 @@
 package com.lembergstate.spcs;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.functions.FirebaseFunctions;
-import com.google.gson.Gson;
-
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,8 +19,6 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-    private AtomicReference<String> Json = new AtomicReference<>("");
-
     @BindView(R.id.input_email)
     EditText input_email;
     @BindView(R.id.input_password)
@@ -51,48 +45,49 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private FirebaseFunctions mFunctions;
 
     private void login() {
         Log.d(TAG, "Login");
 
-//        Intent intent = new Intent(this, HomeActivity.class);
-//        intent.putExtra("Person_ID", input_email.getText().toString());
-//        startActivity(intent);
-//        Intent intent = new Intent(this, NavigationActivity.class);
-//        startActivity(intent);
-        Log.d("Shit", "Start here some shit...");
-        mFunctions = FirebaseFunctions.getInstance();
-        addMessage("HELLO THERE");
 
         // TODO: IF SERVER IS OK UNCOMMENT THIS
-//        if (!validate()) {
-//            onLoginFailed();
-//            return;
-//        }
-//
-//        _loginButton.setEnabled(false);
-//
-//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Authenticating...");
-//        progressDialog.show();
-//
-//        String email = input_rfid.getText().toString();
-//        String password = _passwordText.getText().toString();
-//
-//        // TODO: Implement your own authentication logic here.
-//
-//        new android.os.Handler().postDelayed(
-//                () -> {
-//                    // On complete call either onLoginSuccess or onLoginFailed
-//                    onLoginSuccess();
-//                    // onLoginFailed();
-//                    progressDialog.dismiss();
-//                }, 3000);
-    }
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
 
+        _loginButton.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
+        String email = input_email.getText().toString();
+        String password = _passwordText.getText().toString();
+
+        // TODO: Implement your own authentication logic here.
+        FBFunctions fbFunctions = new FBFunctions("AuthorizationTest",
+                new HashMap<String, Object>() {
+                    {
+                        put("email", email);//entry in java 9
+                        put("password", password);
+                    }
+                });
+        fbFunctions.getJson();
+        new android.os.Handler().postDelayed(
+                () -> {
+                    // On complete call either onLoginSuccess or onLoginFailed
+                    progressDialog.dismiss();
+                    String result = fbFunctions.getJson();
+                    if (result == "fail")
+                        onLoginFailed();
+                    else
+                        onLoginSuccess();
+                }, 10000);
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,64 +108,42 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-// --Commented out by Inspection START (07.04.2019 16:14):
-//    public void onLoginSuccess() {
-//        _loginButton.setEnabled(true);
+    public void onLoginSuccess() {
+        _loginButton.setEnabled(true);
+        Intent intent = new Intent(this, NavigationActivity.class);
+        startActivity(intent);
 //        finish();
-//    }
-// --Commented out by Inspection STOP (07.04.2019 16:14)
-
-// --Commented out by Inspection START (07.04.2019 16:14):
-//// --Commented out by Inspection START (07.04.2019 16:14):
-////    public void onLoginFailed() {
-////        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-////
-////        _loginButton.setEnabled(true);
-////    }
-//// --Commented out by Inspection STOP (07.04.2019 16:14)
-//
-//    public boolean validate() {
-//        boolean valid = true;
-//
-//        String email = input_rfid.getText().toString();
-//        String password = _passwordText.getText().toString();
-//
-//        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-//            input_rfid.setError("enter a valid rfid number");
-//            valid = false;
-//        } else {
-//            input_rfid.setError(null);
-//        }
-//
-//        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-//            _passwordText.setError("between 4 and 10 alphanumeric characters");
-//            valid = false;
-//        } else {
-//            _passwordText.setError(null);
-//        }
-//
-//        return valid;
-//
-//    }
-// --Commented out by Inspection STOP (07.04.2019 16:14)
-
-
-    private void addMessage(String text) {
-        // Create the arguments to the callable function.
-        Map<String, Object> data = new HashMap<>();
-        data.put("text", text);
-        data.put("push", true);
-         mFunctions
-                .getHttpsCallable("GetTest")
-                .call(data)
-                 .addOnSuccessListener(httpsCallableResult -> {
-                     Gson g = new Gson();
-                     Json.set(g.toJson(httpsCallableResult.getData()));
-                     Toast.makeText(getBaseContext(), Json.get(), Toast.LENGTH_LONG).show();
-                 })
-                 .addOnFailureListener(this, e -> {
-                     Json.set("fail");
-                     Toast.makeText(getBaseContext(), Json.get(), Toast.LENGTH_LONG).show();
-                 });
     }
+
+    public void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        _loginButton.setEnabled(true);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = input_email.getText().toString();
+        String password = _passwordText.getText().toString();
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            input_email.setError("enter a valid rfid number");
+            valid = false;
+        } else {
+            input_email.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            _passwordText.setError(null);
+        }
+
+        return valid;
+
+    }
+
+
 }
