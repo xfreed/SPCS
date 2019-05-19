@@ -68,23 +68,11 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
-        FBFunctions fbFunctions = new FBFunctions("AuthorizationTest",
-                new HashMap<String, Object>() {
-                    {
-                        put("email", email);//entry in java 9
-                        put("password", password);
-                    }
-                });
-        fbFunctions.getJson();
         new android.os.Handler().postDelayed(
                 () -> {
                     // On complete call either onLoginSuccess or onLoginFailed
                     progressDialog.dismiss();
-                    String result = fbFunctions.getJson();
-                    if (result.contains("ok"))
-                        onLoginSuccess();
-                    else
-                        onLoginFailed();
+                    onLoginSuccess();
 
                 }, 5000);
 
@@ -112,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(this, NavigationActivity.class);
-        intent.putExtra("EXTRA_EMAIL", input_email.getText().toString());
         startActivity(intent);
 //        finish();
     }
